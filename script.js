@@ -17,11 +17,13 @@
         'dark': "https://unpkg.com/sakura.css/css/sakura-dark.css"
     }
     function getSelectedThemeName() {
-	return localStorage.getItem(localstorageKey) || cssDefaultTheme
+	return localStorage.getItem(
+        localstorageKey) || cssDefaultTheme
     }
     function triggerThemeChange() {
 	const theme = getSelectedThemeName()
-	cssNode.href = themes[theme] || themes[cssDefaultTheme]
+	buttonNode.innerText = theme
+        cssNode.href = themes[theme] || themes[cssDefaultTheme]
     }
     function toggleTheme() {
 	const selected = getSelectedThemeName()
@@ -30,8 +32,9 @@
 	} else {
 	    localStorage.setItem(localstorageKey, cssDefaultTheme)
 	}
-	triggerThemeChange()
+        triggerThemeChange()
     }
+    triggerThemeChange()
     buttonNode.onclick = toggleTheme
     buttonNode.style.position = "fixed"
     buttonNode.style.bottom = 0
