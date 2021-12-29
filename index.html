@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/xhtml" class="top-left">
+<head>
+    <title>Bookmarklet Theme</title>
+    <script type="text/javascript" src="https://raw.githubusercontent.com/lucasew/bookmarklet-theme/master/script.js"></script>
+    <meta charset="UTF-8">
+</head>
+<body class="top-left">
+    <style>
+        .top-left {
+            position: relative;
+            top: 0;
+            left: 0;
+        }
+        body, html {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        body {
+            display: table;
+        }
+        .container {
+            vertical-align: middle;
+            text-align: center;
+            display: table-cell;
+        }
+    </style>
+    <div class="container top-left">
+        <a id="link" href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://raw.githubusercontent.com/lucasew/bookmarklet-theme/master/script.js';})();)">Bookmark it </a>
+    </div>
+    <a style="position: absolute; bottom: 10px; right: 10px;" href="https://github.com/lucasew/bookmarklet-theme">REPO</a>
+</body>
+</html>
