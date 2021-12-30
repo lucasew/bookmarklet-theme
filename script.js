@@ -16,7 +16,7 @@
         }
     }
     if (!cssNode) {
-        let cssNode = document.createElement('link');
+        cssNode = document.createElement('link');
         document.head.appendChild(cssNode)
     }
 

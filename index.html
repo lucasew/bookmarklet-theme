@@ -2,36 +2,28 @@
 <head>
     <title>Bookmarklet Theme</title>
     <meta charset="UTF-8">
-</head>
-<body class="top-left">
-    <script type="text/javascript" src="https://bookmarklet-theme.vercel.app/script.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <style>
-        .top-left {
-            position: relative;
-            top: 0;
-            left: 0;
-        }
-        body, html {
-            height: 100%;
-            width: 100%;
-            margin: 0;
-            padding: 0;
-            position: fixed;
-            top: 0;
-            left: 0;
-        }
-        body {
-            display: table;
-        }
-        .container {
-            vertical-align: middle;
-            text-align: center;
-            display: table-cell;
-        }
+      a {
+	font-size: 2rem;
+	text-decoration: none;
+	color: black;
+	font-weight: 800;
+      }
+      body {
+	  width: 100vw;
+	  height: 100vh;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+      }
     </style>
-    <div class="container top-left">
-        <a id="link" href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://bookmarklet-theme.vercel.app/script.js';})();">Bookmark it </a>
-    </div>
-    <a style="position: absolute; bottom: 10px; right: 10px;" href="https://github.com/lucasew/bookmarklet-theme">REPO</a>
+</head>
+<body>
+    <script src="script.js"></script>
+    <a id="link" href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://bookmarklet-theme.vercel.app/script.js';})();">Bookmark it </a>
+    <a style="position: absolute; bottom: 2.5rem; right: 10px;" href="https://github.com/lucasew/bookmarklet-theme">
+      <img src="https://github.com/favicon.ico"></img>
+    </a>
 </body>
 </html>
