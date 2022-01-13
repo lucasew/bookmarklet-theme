@@ -5,7 +5,7 @@
     const cssDefaultDarkTheme = url.searchParams.get('defautDarkTheme') || 'dark'
     const localstorageKey = url.searchParams.get('localstorageKey') || 'theme'
 
-    let fontSizePercent = parseInt(url.searchParams.get('fontsize')) || 100
+    let fontSizePx = parseInt(url.searchParams.get('fontsize')) || parseInt(window.getComputedStyle(document.body).fontSize) || 18
 
     const buttonThemeToggle = document.createElement('button')
     const buttonArea = document.createElement('div')
@@ -38,10 +38,10 @@
         const theme = getSelectedThemeName()
         buttonThemeToggle.innerHTML = theme + "<sub> </sub>"
         cssNode.href = themes[theme] || themes[cssDefaultTheme]
-        document.body.style.fontSize = String(fontSizePercent) + "%"
+        document.body.style.fontSize = String(fontSizePx) + "px"
     }
     function changeFontSize(diff) {
-        fontSizePercent = fontSizePercent + diff
+        fontSizePx = fontSizePx + diff
         triggerThemeChange()
     }
     function toggleTheme() {
@@ -57,11 +57,11 @@
     buttonThemeToggle.onclick = toggleTheme
     
     const buttonIncreaseFont = document.createElement('button')
-    buttonIncreaseFont.onclick = () => changeFontSize(10)
+    buttonIncreaseFont.onclick = () => changeFontSize(1)
     buttonIncreaseFont.innerHTML = 'A<sub>+</sub>'
 
     const buttonDecreaseFont = document.createElement('button')
-    buttonDecreaseFont.onclick = () => changeFontSize(-10)
+    buttonDecreaseFont.onclick = () => changeFontSize(-1)
     buttonDecreaseFont.innerHTML = 'A<sub>-</sub>'
 
     buttonArea.style.position = "fixed"
