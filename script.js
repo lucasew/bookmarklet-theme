@@ -5,7 +5,10 @@
     const cssDefaultDarkTheme = url.searchParams.get('defautDarkTheme') || 'dark'
     const localstorageKey = url.searchParams.get('localstorageKey') || 'theme'
 
-    const buttonNode = document.createElement('button')
+    let fontSizePercent = parseInt(url.searchParams.get('fontsize')) || 100
+
+    const buttonThemeToggle = document.createElement('button')
+    const buttonArea = document.createElement('div')
     let cssNode = null
     if (!cssNode) {
         const themeNode = document.getElementById('theme')
@@ -29,27 +32,43 @@
         'dark': "https://unpkg.com/sakura.css/css/sakura-dark.css"
     }
     function getSelectedThemeName() {
-	return localStorage.getItem(
-        localstorageKey) || cssDefaultTheme
+        return localStorage.getItem(localstorageKey) || cssDefaultTheme
     }
     function triggerThemeChange() {
-	const theme = getSelectedThemeName()
-	buttonNode.innerText = theme
+        const theme = getSelectedThemeName()
+        buttonThemeToggle.innerHTML = theme + "<sub> </sub>"
         cssNode.href = themes[theme] || themes[cssDefaultTheme]
+        document.body.style.fontSize = String(fontSizePercent) + "%"
+    }
+    function changeFontSize(diff) {
+        fontSizePercent = fontSizePercent + diff
+        triggerThemeChange()
     }
     function toggleTheme() {
-	const selected = getSelectedThemeName()
-	if (selected === cssDefaultTheme) {
-	    localStorage.setItem(localstorageKey, cssDefaultDarkTheme)
-	} else {
-	    localStorage.setItem(localstorageKey, cssDefaultTheme)
-	}
+        const selected = getSelectedThemeName()
+        if (selected === cssDefaultTheme) {
+            localStorage.setItem(localstorageKey, cssDefaultDarkTheme)
+        } else {
+            localStorage.setItem(localstorageKey, cssDefaultTheme)
+        }
         triggerThemeChange()
     }
     triggerThemeChange()
-    buttonNode.onclick = toggleTheme
-    buttonNode.style.position = "fixed"
-    buttonNode.style.bottom = 0
-    buttonNode.style.right = 0
-    document.body.appendChild(buttonNode)
+    buttonThemeToggle.onclick = toggleTheme
+    
+    const buttonIncreaseFont = document.createElement('button')
+    buttonIncreaseFont.onclick = () => changeFontSize(10)
+    buttonIncreaseFont.innerHTML = 'A<sub>+</sub>'
+
+    const buttonDecreaseFont = document.createElement('button')
+    buttonDecreaseFont.onclick = () => changeFontSize(-10)
+    buttonDecreaseFont.innerHTML = 'A<sub>-</sub>'
+
+    buttonArea.style.position = "fixed"
+    buttonArea.style.bottom = 0
+    buttonArea.style.right = 0
+    buttonArea.appendChild(buttonIncreaseFont)
+    buttonArea.appendChild(buttonDecreaseFont)
+    buttonArea.appendChild(buttonThemeToggle)
+    document.body.appendChild(buttonArea)
 })()
