@@ -37,7 +37,11 @@
     }
     function triggerThemeChange() {
         const theme = getSelectedThemeName()
-        buttonThemeToggle.innerHTML = theme + "<sub> </sub>"
+        // SECURITY-NOTE: Use textContent instead of innerHTML to prevent DOM-based XSS when setting the theme string.
+        buttonThemeToggle.textContent = theme
+        const sub = document.createElement("sub")
+        sub.textContent = " "
+        buttonThemeToggle.appendChild(sub)
         cssNode.href = themes[theme] || themes[cssDefaultTheme]
         const size = String(fontSizeRem)
         root.style.fontSize = `calc(16px + ${size}px)`

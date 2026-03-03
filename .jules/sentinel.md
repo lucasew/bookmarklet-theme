@@ -1,0 +1,1 @@
+- 2026-03-03: [DOM-based XSS - Avoid using innerHTML with user-controlled input like theme names directly, prefer textContent and safe element creation.]
