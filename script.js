@@ -26,11 +26,11 @@
 
     cssNode.id = "css";
     cssNode.rel = "stylesheet";
-    cssNode.href = "https://unpkg.com/sakura.css/css/sakura.css";
     cssNode.type = "text/css";
+    cssNode.crossOrigin = "anonymous";
     const themes = {
-        'white': "https://unpkg.com/sakura.css/css/sakura.css",
-        'dark': "https://unpkg.com/sakura.css/css/sakura-dark.css"
+        'white': { url: "https://unpkg.com/sakura.css@1.5.1/css/sakura.css", integrity: "sha384-ZKJPMh7X2VgE0MEjXdbOZxmKGF8C3UJvKmoP96SiJNPQLMN372XBrBK9m1cHvC4r" },
+        'dark': { url: "https://unpkg.com/sakura.css@1.5.1/css/sakura-dark.css", integrity: "sha384-WfWZ/vL5Qqc7KCYT4egNnDatzmhlcNoXn5MTzhOIijamONILzryKenMfUAwwtTpb" }
     }
     function getSelectedThemeName() {
         return localStorage.getItem(localstorageKey) || cssDefaultTheme
@@ -38,7 +38,11 @@
     function triggerThemeChange() {
         const theme = getSelectedThemeName()
         buttonThemeToggle.innerHTML = theme + "<sub> </sub>"
-        cssNode.href = themes[theme] || themes[cssDefaultTheme]
+        let selectedTheme = themes[theme];
+        if (!selectedTheme || typeof selectedTheme.url !== 'string') selectedTheme = themes[cssDefaultTheme];
+        if (!selectedTheme || typeof selectedTheme.url !== 'string') selectedTheme = themes['white'];
+        cssNode.href = selectedTheme.url;
+        cssNode.integrity = selectedTheme.integrity;
         const size = String(fontSizeRem)
         root.style.fontSize = `calc(16px + ${size}px)`
     }

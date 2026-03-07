@@ -1,0 +1,1 @@
+- 2025-03-07: [Supply Chain Risk] Unpinned third-party resources without Subresource Integrity (SRI) can allow malicious code execution or data exfiltration if the CDN is compromised.
