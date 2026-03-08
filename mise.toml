@@ -1,0 +1,5 @@
+[tasks.ci]
+run = "node -c script.js"
+
+[tasks.test]
+run = "node -c script.js"

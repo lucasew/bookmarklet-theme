@@ -1,88 +1,126 @@
 (function () {
+    function reportError(error, context) {
+        console.error("Bookmarklet Theme Error:", context, error);
+    }
+
+    try {
+
+    const CONSTANTS = {
+        DEFAULT_THEME: 'white',
+        DEFAULT_DARK_THEME: 'dark',
+        LOCALSTORAGE_KEY_DEFAULT: 'theme',
+        DEFAULT_FONT_SIZE_REM: 1,
+        BASE_FONT_SIZE_PX: 16,
+        BUTTON_HEIGHT: "0.5in",
+        BUTTON_WIDTH: "calc(100vw / 3)",
+        SAKURA_CSS: "https://unpkg.com/sakura.css/css/sakura.css",
+        SAKURA_DARK_CSS: "https://unpkg.com/sakura.css/css/sakura-dark.css"
+    };
+
     const root = document.querySelector(':root')
     const url = new URL(document.currentScript.src)
-    let cssTheme = url.searchParams.get('theme') || 'white'
+    let cssTheme = url.searchParams.get('theme') || CONSTANTS.DEFAULT_THEME
     const cssDefaultTheme = url.searchParams.get('defautTheme') || cssTheme
-    const cssDefaultDarkTheme = url.searchParams.get('defautDarkTheme') || 'dark'
-    const localstorageKey = url.searchParams.get('localstorageKey') || 'theme'
+    const cssDefaultDarkTheme = url.searchParams.get('defautDarkTheme') || CONSTANTS.DEFAULT_DARK_THEME
+    const localstorageKey = url.searchParams.get('localstorageKey') || CONSTANTS.LOCALSTORAGE_KEY_DEFAULT
 
-    let fontSizeRem = parseInt(url.searchParams.get('fontsize')) || 1
+    let fontSizeRem = parseInt(url.searchParams.get('fontsize')) || CONSTANTS.DEFAULT_FONT_SIZE_REM
 
-    const buttonThemeToggle = document.createElement('button')
     const buttonArea = document.createElement('div')
-    let cssNode = null
-    if (!cssNode) {
+
+    function setupStylesheetNode() {
+        let node = null;
         const themeNode = document.getElementById('theme')
-        if (themeNode) {
-            if (themeNode.nodeName == "LINK" && themeNode.rel == "stylesheet") {
-                cssNode = themeNode
-            }
+        if (themeNode && themeNode.nodeName === "LINK" && themeNode.rel === "stylesheet") {
+            node = themeNode;
         }
-    }
-    if (!cssNode) {
-        cssNode = document.createElement('link');
-        document.head.appendChild(cssNode)
+        if (!node) {
+            node = document.createElement('link');
+            document.head.appendChild(node)
+        }
+        node.id = "css";
+        node.rel = "stylesheet";
+        node.href = CONSTANTS.SAKURA_CSS;
+        node.type = "text/css";
+        return node;
     }
 
-    cssNode.id = "css";
-    cssNode.rel = "stylesheet";
-    cssNode.href = "https://unpkg.com/sakura.css/css/sakura.css";
-    cssNode.type = "text/css";
+    const cssNode = setupStylesheetNode();
+
     const themes = {
-        'white': "https://unpkg.com/sakura.css/css/sakura.css",
-        'dark': "https://unpkg.com/sakura.css/css/sakura-dark.css"
+        'white': CONSTANTS.SAKURA_CSS,
+        'dark': CONSTANTS.SAKURA_DARK_CSS
     }
     function getSelectedThemeName() {
-        return localStorage.getItem(localstorageKey) || cssDefaultTheme
+        try {
+            return localStorage.getItem(localstorageKey) || cssDefaultTheme
+        } catch (error) {
+            reportError(error, "getSelectedThemeName");
+            return cssDefaultTheme;
+        }
     }
     function triggerThemeChange() {
         const theme = getSelectedThemeName()
         buttonThemeToggle.innerHTML = theme + "<sub> </sub>"
         cssNode.href = themes[theme] || themes[cssDefaultTheme]
         const size = String(fontSizeRem)
-        root.style.fontSize = `calc(16px + ${size}px)`
+        root.style.fontSize = `calc(${CONSTANTS.BASE_FONT_SIZE_PX}px + ${size}px)`
     }
     function changeFontSize(diff) {
-        fontSizeRem = fontSizeRem + diff
-        triggerThemeChange()
+        try {
+            fontSizeRem = fontSizeRem + diff
+            triggerThemeChange()
+        } catch (error) {
+            reportError(error, "changeFontSize");
+        }
     }
     function toggleTheme() {
-        const selected = getSelectedThemeName()
-        if (selected === cssDefaultTheme) {
-            localStorage.setItem(localstorageKey, cssDefaultDarkTheme)
-        } else {
-            localStorage.setItem(localstorageKey, cssDefaultTheme)
+        try {
+            const selected = getSelectedThemeName()
+            if (selected === cssDefaultTheme) {
+                localStorage.setItem(localstorageKey, cssDefaultDarkTheme)
+            } else {
+                localStorage.setItem(localstorageKey, cssDefaultTheme)
+            }
+            triggerThemeChange()
+        } catch (error) {
+            reportError(error, "toggleTheme");
         }
-        triggerThemeChange()
     }
+    function createControlButton(html, onClickHandler) {
+        const btn = document.createElement('button')
+        btn.innerHTML = html
+        btn.onclick = onClickHandler
+        btn.style.height = CONSTANTS.BUTTON_HEIGHT
+        btn.style.width = CONSTANTS.BUTTON_WIDTH
+        btn.style.padding = '0'
+        return btn
+    }
+
+    function initializeControlArea(area, btnIncrease, btnToggle, btnDecrease) {
+        area.style.position = "fixed"
+        area.style.bottom = 0
+        area.style.left = 0
+        area.style.lineHeight = 0
+        area.style.fontSize = 0
+        area.style.width = "100vw"
+        area.appendChild(btnIncrease)
+        area.appendChild(btnToggle)
+        area.appendChild(btnDecrease)
+        document.body.appendChild(area)
+    }
+
+    // We instantiate the theme toggle button first so we can update its label via triggerThemeChange()
+    const buttonThemeToggle = createControlButton('', toggleTheme)
+
     triggerThemeChange()
-    buttonThemeToggle.onclick = toggleTheme
-    buttonThemeToggle.style.height = "0.5in"
-    buttonThemeToggle.style.width = "calc(100vw / 3)"
-    buttonThemeToggle.style.padding = '0'
     
-    const buttonIncreaseFont = document.createElement('button')
-    buttonIncreaseFont.onclick = () => changeFontSize(1)
-    buttonIncreaseFont.innerHTML = 'A<sub>+</sub>'
-    buttonIncreaseFont.style.height = "0.5in"
-    buttonIncreaseFont.style.width = "calc(100vw / 3)"
-    buttonIncreaseFont.style.padding = '0'
+    const buttonIncreaseFont = createControlButton('A<sub>+</sub>', () => changeFontSize(1))
+    const buttonDecreaseFont = createControlButton('A<sub>-</sub>', () => changeFontSize(-1))
 
-    const buttonDecreaseFont = document.createElement('button')
-    buttonDecreaseFont.onclick = () => changeFontSize(-1)
-    buttonDecreaseFont.innerHTML = 'A<sub>-</sub>'
-    buttonDecreaseFont.style.height = "0.5in"
-    buttonDecreaseFont.style.width = "calc(100vw / 3)"
-    buttonDecreaseFont.style.padding = '0'
+    initializeControlArea(buttonArea, buttonIncreaseFont, buttonThemeToggle, buttonDecreaseFont)
 
-    buttonArea.style.position = "fixed"
-    buttonArea.style.bottom = 0
-    buttonArea.style.left = 0
-    buttonArea.style.lineHeight = 0
-    buttonArea.style.fontSize = 0
-    buttonArea.style.width = "100vw"
-    buttonArea.appendChild(buttonIncreaseFont)
-    buttonArea.appendChild(buttonThemeToggle)
-    buttonArea.appendChild(buttonDecreaseFont)
-    document.body.appendChild(buttonArea)
+    } catch (error) {
+        reportError(error, "Initialization");
+    }
 })()
