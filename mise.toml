@@ -1,0 +1,5 @@
+[tools]
+node = "20"
+
+[tasks]
+ci = "node -c script.js"
