@@ -4,7 +4,8 @@
     let cssTheme = url.searchParams.get('theme') || 'white'
     const cssDefaultTheme = url.searchParams.get('defautTheme') || cssTheme
     const cssDefaultDarkTheme = url.searchParams.get('defautDarkTheme') || 'dark'
-    const localstorageKey = url.searchParams.get('localstorageKey') || 'theme'
+    // SECURITY-NOTE: Prefix the localstorageKey to prevent Arbitrary Local Storage Poisoning where malicious URLs could overwrite critical app data.
+    const localstorageKey = 'bookmarklet_theme_' + (url.searchParams.get('localstorageKey') || 'theme')
 
     let fontSizeRem = parseInt(url.searchParams.get('fontsize')) || 1
 

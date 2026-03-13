@@ -1,0 +1,1 @@
+- 2026-03-13: [Arbitrary Local Storage Poisoning via URL parameters - Avoid trusting query parameters for local storage keys without prefixing/isolating them.]
