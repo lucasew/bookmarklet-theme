@@ -1,0 +1,1 @@
+- 2026-03-29: When fixing typos in parameter names, always keep the old misspelled parameter as a fallback to maintain backward compatibility for existing URLs.

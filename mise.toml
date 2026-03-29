@@ -1,0 +1,4 @@
+[tasks]
+lint = "node -c script.js"
+fmt = "echo 'No formatters configured yet.'"
+test = "echo 'No tests configured yet.'"
