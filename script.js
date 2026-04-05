@@ -1,3 +1,15 @@
+/**
+ * Bookmarklet entrypoint that injects a floating UI for reading accessibility.
+ * It parses URL parameters from the script source, mounts a dynamic CSS link
+ * for the selected Sakura theme, and injects a fixed position div at the bottom
+ * of the screen to toggle themes and scale the root font size.
+ *
+ * Side effects:
+ * - Appends a `<link>` for CSS in `<head>` if not present.
+ * - Appends a container `<div>` in `<body>` holding three buttons.
+ * - Mutates `:root` element's style attribute to scale fonts.
+ * - Mutates `localStorage` to persist theme choices.
+ */
 (function () {
     const root = document.querySelector(':root')
     const url = new URL(document.currentScript.src)
@@ -32,9 +44,22 @@
         'white': "https://unpkg.com/sakura.css/css/sakura.css",
         'dark': "https://unpkg.com/sakura.css/css/sakura-dark.css"
     }
+
+    /**
+     * Retrieves the user's preferred theme key, falling back to the configured
+     * default theme from the script parameters if no choice has been saved yet.
+     * @returns {string} The active theme key (e.g. 'white', 'dark')
+     */
     function getSelectedThemeName() {
         return localStorage.getItem(localstorageKey) || cssDefaultTheme
     }
+
+    /**
+     * Propagates the active state to the DOM elements.
+     * Updates the injected `<link>` stylesheet URL based on the current theme key,
+     * reflects the current theme name in the toggle button's text content, and
+     * recalculates the `:root` font size to apply the current offset `fontSizeRem`.
+     */
     function triggerThemeChange() {
         const theme = getSelectedThemeName()
         buttonThemeToggle.innerHTML = theme + "<sub> </sub>"
@@ -42,10 +67,23 @@
         const size = String(fontSizeRem)
         root.style.fontSize = `calc(16px + ${size}px)`
     }
+
+    /**
+     * Shifts the accumulated font-size delta by the specified difference.
+     * Always triggers a DOM update to reflect the newly calculated font size.
+     * @param {number} diff - Amount to adjust the base scale (can be negative).
+     */
     function changeFontSize(diff) {
         fontSizeRem = fontSizeRem + diff
         triggerThemeChange()
     }
+
+    /**
+     * Switches the theme state strictly between the URL-provided default light
+     * and default dark keys. The decision operates as a binary toggle logic
+     * based entirely on whether the current state equals `cssDefaultTheme`.
+     * Persists the newly selected state back to localStorage before applying DOM changes.
+     */
     function toggleTheme() {
         const selected = getSelectedThemeName()
         if (selected === cssDefaultTheme) {
