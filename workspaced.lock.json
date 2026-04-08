@@ -1,0 +1,16 @@
+{
+  "dependencies": [
+    {
+      "kind": "tool",
+      "name": "shellcheck",
+      "ref": "github:koalaman/shellcheck",
+      "version": "v0.11.0"
+    },
+    {
+      "kind": "tool",
+      "name": "actionlint",
+      "ref": "github:rhysd/actionlint",
+      "version": "v1.7.12"
+    }
+  ]
+}
