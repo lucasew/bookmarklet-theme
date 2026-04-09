@@ -1,0 +1,1 @@
+- 2026-04-09: Always use strict equality (===) and avoid redundant conditionals immediately after variable initialization.

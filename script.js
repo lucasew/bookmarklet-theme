@@ -10,17 +10,13 @@
 
     const buttonThemeToggle = document.createElement('button')
     const buttonArea = document.createElement('div')
-    let cssNode = null
-    if (!cssNode) {
-        const themeNode = document.getElementById('theme')
-        if (themeNode) {
-            if (themeNode.nodeName == "LINK" && themeNode.rel == "stylesheet") {
-                cssNode = themeNode
-            }
-        }
-    }
-    if (!cssNode) {
-        cssNode = document.createElement('link');
+
+    const themeNode = document.getElementById('theme')
+    let cssNode = (themeNode && themeNode.nodeName === "LINK" && themeNode.rel === "stylesheet")
+        ? themeNode
+        : document.createElement('link');
+
+    if (!document.head.contains(cssNode)) {
         document.head.appendChild(cssNode)
     }
 
