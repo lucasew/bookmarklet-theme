@@ -1,0 +1,1 @@
+- 2024-06-04: Format codebase using Prettier to standardize style and remove invalid void tags like `</img>`
