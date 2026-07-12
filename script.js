@@ -57,23 +57,20 @@
     }
     triggerThemeChange()
     buttonThemeToggle.onclick = toggleTheme
-    buttonThemeToggle.style.height = "0.5in"
-    buttonThemeToggle.style.width = "calc(100vw / 3)"
-    buttonThemeToggle.style.padding = '0'
     
     const buttonIncreaseFont = document.createElement('button')
     buttonIncreaseFont.onclick = () => changeFontSize(1)
     buttonIncreaseFont.innerHTML = 'A<sub>+</sub>'
-    buttonIncreaseFont.style.height = "0.5in"
-    buttonIncreaseFont.style.width = "calc(100vw / 3)"
-    buttonIncreaseFont.style.padding = '0'
 
     const buttonDecreaseFont = document.createElement('button')
     buttonDecreaseFont.onclick = () => changeFontSize(-1)
     buttonDecreaseFont.innerHTML = 'A<sub>-</sub>'
-    buttonDecreaseFont.style.height = "0.5in"
-    buttonDecreaseFont.style.width = "calc(100vw / 3)"
-    buttonDecreaseFont.style.padding = '0'
+
+    for (const btn of [buttonThemeToggle, buttonIncreaseFont, buttonDecreaseFont]) {
+        btn.style.height = "0.5in"
+        btn.style.width = "calc(100vw / 3)"
+        btn.style.padding = '0'
+    }
 
     buttonArea.style.position = "fixed"
     buttonArea.style.bottom = 0
