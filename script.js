@@ -2,8 +2,8 @@
     const root = document.querySelector(':root')
     const url = new URL(document.currentScript.src)
     let cssTheme = url.searchParams.get('theme') || 'white'
-    const cssDefaultTheme = url.searchParams.get('defautTheme') || cssTheme
-    const cssDefaultDarkTheme = url.searchParams.get('defautDarkTheme') || 'dark'
+    const cssDefaultTheme = url.searchParams.get('defaultTheme') || url.searchParams.get('defautTheme') || cssTheme
+    const cssDefaultDarkTheme = url.searchParams.get('defaultDarkTheme') || url.searchParams.get('defautDarkTheme') || 'dark'
     const localstorageKey = url.searchParams.get('localstorageKey') || 'theme'
 
     let fontSizeRem = parseInt(url.searchParams.get('fontsize')) || 1
